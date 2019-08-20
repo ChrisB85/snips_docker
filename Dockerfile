@@ -1,6 +1,9 @@
 FROM ubuntu:18.04
+#FROM jrei/systemd-ubuntu:latest
 
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get update
+RUN apt-get install dialog apt-utils -y
 RUN apt-get install -y dirmngr apt-transport-https
 RUN bash -c 'echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list'
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F727C778CCB0A455
@@ -42,4 +45,17 @@ RUN apt-get install -y python3.6 python3-pip
 RUN apt-get install -y nodejs npm
 RUN npm install -g snips-sam
 
-RUN useradd -p $(openssl passwd -1 raspberry) pi
+RUN apt-get install -y openssh-server sudo zip
+
+RUN useradd -m -p $(openssl passwd -1 raspberry) pi
+RUN echo 'pi ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/pi
+
+RUN mkdir -p /config && cp /etc/snips.toml /config/snips.toml.default
+#RUN umount /usr/share/snips/assistant/
+
+COPY ${PWD}/sam_init.sh /sam_init.sh
+COPY ${PWD}/sam_install.sh /sam_install.sh
+
+#RUN echo '\n' | echo '\n' | sam connect snips
+
+CMD service ssh start && bash

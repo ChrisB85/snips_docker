@@ -57,7 +57,7 @@ RUN apt-get install -y nodejs npm
 RUN npm install -g snips-sam
 
 # SSH & others
-RUN apt-get install -y openssh-server sudo zip git
+RUN apt-get install -y openssh-server sudo zip git mc
 
 # Keep home directory on sudo
 RUN echo 'Defaults env_keep -= "HOME"' > /etc/sudoers.d/sudoers
@@ -67,8 +67,6 @@ RUN mkdir -p /config && cp /etc/snips.toml /config/snips.toml.default
 
 # Scripts
 COPY ${PWD}/scripts /scripts
-
-RUN apt-get install -y mc
 
 # Replace default entrypoint
 COPY ${PWD}/scripts/entrypoint.sh /docker-entrypoint.sh

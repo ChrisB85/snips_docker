@@ -42,7 +42,7 @@ snips-tts \
 snips-watch \
 snips-asr-google
 
-RUN apt-get install -y python3.6 python3-pip
+RUN apt-get install -y python3.6 python3-pip python3-venv
 RUN pip3 install virtualenv
 
 RUN apt-get install -y nodejs npm

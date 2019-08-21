@@ -1,0 +1,3 @@
+[submodule "scripts/custom_tts"]
+	path = scripts/custom_tts
+	url = https://github.com/ChrisB85/snips_custom_tts.git

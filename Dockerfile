@@ -12,6 +12,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F727C778CCB0A455
 RUN apt-get install -y ca-certificates
 RUN apt-get update
 
+# Snips packages
 RUN apt-get install -y \
 snips-platform-common=0.61.1 \
 snips-analytics=0.61.1 \
@@ -42,31 +43,32 @@ snips-tts \
 snips-watch \
 snips-asr-google
 
+# MQTT server
+RUN apt-get install -y mosquitto
+
+# Python
 RUN apt-get install -y python3.6 python3-pip python3-venv
 RUN pip3 install virtualenv
 
+# NodeJS
 RUN apt-get install -y nodejs npm
+
+# Snips SAM
 RUN npm install -g snips-sam
 
+# SSH & others
 RUN apt-get install -y openssh-server sudo zip git
 
-RUN useradd -m -p $(openssl passwd -1 raspberry) pi
-RUN echo 'pi ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/pi
+# Keep home directory on sudo
+RUN echo 'Defaults env_keep -= "HOME"' > /etc/sudoers.d/sudoers
 
+# Config
 RUN mkdir -p /config && cp /etc/snips.toml /config/snips.toml.default
-#RUN umount /usr/share/snips/assistant/
 
-COPY ${PWD}/sam_init.sh /sam_init.sh
-COPY ${PWD}/sam_install.sh /sam_install.sh
+# Scripts
+COPY ${PWD}/scripts /scripts
 
 RUN apt-get install -y mc
 
-#RUN echo '\n' | echo '\n' | sam connect snips
-
-#RUN apt-get -y install iproute2 procps iputils-ping dnsutils traceroute
-
-#CMD ["/bin/sh", "-c", "exec /sbin/init"]
-
-#CMD /sbin/init
-
-#ENTRYPOINT ["/docker-entrypoint.sh"]
+# Replace default entrypoint
+COPY ${PWD}/scripts/entrypoint.sh /docker-entrypoint.sh

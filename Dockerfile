@@ -8,18 +8,15 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F727C778CCB0A455
 RUN echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
 #RUN echo "deb http://ppa.launchpad.net/xapienz/curl34/ubuntu stable main" > /etc/apt/sources.list.d/snips.list
 RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
-#RUN add-apt-repository ppa:xapienz/curl34
 
-RUN locale-gen pl_PL.UTF-8
-RUN export LANGUAGE=pl_PL
-RUN export LC_ALL=pl_PL.UTF-8
-RUN export LANG=pl_PL.UTF-8
-RUN update-locale LANG=pl_PL.UTF-8
+# Scripts
+COPY ${PWD}/scripts /scripts
 
-#RUN apt-get install -y ca-certificates
+# Set locale
+RUN /scripts/set_locale.sh
+RUN echo "source /scripts/set_locale.sh" >> /root/.bashrc
 
 RUN apt-get update
-#RUN apt-get install dialog apt-utils -y
 
 # Snips packages
 RUN apt-get install -y \
@@ -72,19 +69,8 @@ RUN echo 'Defaults env_keep -= "HOME"' > /etc/sudoers.d/sudoers
 # Config
 RUN mkdir -p /config && cp /etc/snips.toml /config/snips.toml.default
 
-# Scripts
-COPY ${PWD}/scripts /scripts
-
 # Others
 RUN apt-get install -y mc rsyslog
-
-#RUN locale-gen pl_PL.UTF-8
-#RUN export LANGUAGE=pl_PL.UTF-8
-#RUN export LANG=pl_PL.UTF-8
-#RUN export LC_ALL=pl_PL.UTF-8
-#RUN update-locale LANG=pl_PL.UTF-8
-
-RUN /scripts/set_locale.sh
 
 # Replace default entrypoint
 COPY ${PWD}/scripts/entrypoint.sh /docker-entrypoint.sh

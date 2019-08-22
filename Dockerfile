@@ -2,13 +2,19 @@
 #FROM jrei/systemd-ubuntu:latest
 FROM aheimsbakk/systemd-ubuntu:18.04
 
-RUN apt-get install -y dirmngr apt-transport-https software-properties-common dialog apt-utils ca-certificates
+RUN apt-get install -y dirmngr apt-transport-https software-properties-common dialog apt-utils ca-certificates locales
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F727C778CCB0A455
 
 RUN echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
 #RUN echo "deb http://ppa.launchpad.net/xapienz/curl34/ubuntu stable main" > /etc/apt/sources.list.d/snips.list
 RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
 #RUN add-apt-repository ppa:xapienz/curl34
+
+RUN locale-gen pl_PL.UTF-8
+RUN export LANGUAGE=pl_PL
+RUN export LC_ALL=pl_PL.UTF-8
+RUN export LANG=pl_PL.UTF-8
+RUN update-locale LANG=pl_PL.UTF-8
 
 #RUN apt-get install -y ca-certificates
 
@@ -71,6 +77,14 @@ COPY ${PWD}/scripts /scripts
 
 # Others
 RUN apt-get install -y mc rsyslog
+
+#RUN locale-gen pl_PL.UTF-8
+#RUN export LANGUAGE=pl_PL.UTF-8
+#RUN export LANG=pl_PL.UTF-8
+#RUN export LC_ALL=pl_PL.UTF-8
+#RUN update-locale LANG=pl_PL.UTF-8
+
+RUN /scripts/set_locale.sh
 
 # Replace default entrypoint
 COPY ${PWD}/scripts/entrypoint.sh /docker-entrypoint.sh

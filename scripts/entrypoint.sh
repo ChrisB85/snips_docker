@@ -1,5 +1,11 @@
 #!/bin/bash
 
+RUN locale-gen pl_PL.UTF-8
+RUN export LANGUAGE=pl_PL
+RUN export LANG=pl_PL.UTF-8
+RUN export LC_ALL=pl_PL.UTF-8
+RUN update-locale LANG=pl_PL.UTF-8
+
 USER='pi'
 PASSWORD='raspberry'
 
@@ -20,4 +26,11 @@ if [ ! -d $TTS_CACHE_DIR ]; then
     chmod 777 $TTS_CACHE_DIR
 fi
 
+EMPTY_DIR='/var/empty'
+if [ ! -d $EMPTY_DIR ]; then
+    mkdir $EMPTY_DIR
+    chmod 777 $EMPTY_DIR
+fi
+
 exec "$@"
+

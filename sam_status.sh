@@ -1,1 +1,1 @@
-docker exec -it snips tail -f /var/log/syslog
+docker exec -it snips /bin/sh /scripts/sam_status.sh

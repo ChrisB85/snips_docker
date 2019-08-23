@@ -10,3 +10,10 @@ if [ ! -f /etc/mosquitto/mosquitto.conf ]; then
     cp -Trf /etc/mosquitto.bak /etc/mosquitto
     service mosquitto restart
 fi
+
+if [ ! -d /var/lib/snips/skills ]; then
+    cp -Trf /var/lib/snips.bak /var/lib/snips
+    chown -R _snips-skills /var/lib/snips
+    service snips-skill-server restart
+fi
+

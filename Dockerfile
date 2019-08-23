@@ -65,6 +65,7 @@ RUN npm install -g snips-sam
 # Default config backup
 RUN cp /etc/snips.toml /etc/snips.toml.bak
 RUN cp -r /etc/mosquitto /etc/mosquitto.bak
+RUN cp -r /var/lib/snips /var/lib/snips.bak
 
 # SSH & requirements
 RUN apt-get install -y openssh-server sudo zip git mpg123 httpie

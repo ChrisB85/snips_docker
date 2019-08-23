@@ -11,4 +11,4 @@ fi
 export LANGUAGE=$LANG_SYMBOL
 export LC_ALL=$LANG_SYMBOL
 export LANG=$LANG_SYMBOL
-update-locale LANG=$LANG_SYMBOL
+update-locale

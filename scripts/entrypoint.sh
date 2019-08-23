@@ -15,10 +15,10 @@ if [ ! $? -eq 0 ]; then
     echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER
 fi
 
-ASSISTANT_DIR='/usr/share/snips/assistant'
-if grep -qs $ASSISTANT_DIR /proc/mounts; then
-    umount $ASSISTANT_DIR
-fi
+#ASSISTANT_DIR='/usr/share/snips/assistant'
+#if grep -qs $ASSISTANT_DIR /proc/mounts; then
+#    umount $ASSISTANT_DIR
+#fi
 
 TTS_CACHE_DIR='/usr/share/snips/tts_cache'
 if [ ! -d $TTS_CACHE_DIR ]; then

@@ -6,7 +6,6 @@ RUN apt-get install -y dirmngr apt-transport-https software-properties-common di
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F727C778CCB0A455
 
 RUN echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
-#RUN echo "deb http://ppa.launchpad.net/xapienz/curl34/ubuntu stable main" > /etc/apt/sources.list.d/snips.list
 RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
 
 # Scripts
@@ -52,7 +51,10 @@ RUN apt-get install -y mosquitto
 
 # Python
 RUN apt-get install -y python3.6 python3-pip python3-venv
-RUN pip3 install python-dateutil virtualenv
+RUN pip3 install python-dateutil virtualenv toml
+
+# Alsa
+RUN apt-get install -y alsa-utils alsa-tools
 
 # NodeJS
 RUN apt-get install -y nodejs npm
@@ -60,14 +62,15 @@ RUN apt-get install -y nodejs npm
 # Snips SAM
 RUN npm install -g snips-sam
 
+# Default config backup
+RUN cp /etc/snips.toml /etc/snips.toml.bak
+RUN cp -r /etc/mosquitto /etc/mosquitto.bak
+
 # SSH & requirements
 RUN apt-get install -y openssh-server sudo zip git mpg123 httpie
 
 # Keep home directory on sudo
 RUN echo 'Defaults env_keep -= "HOME"' > /etc/sudoers.d/sudoers
-
-# Config
-RUN mkdir -p /config && cp /etc/snips.toml /config/snips.toml.default
 
 # Others
 RUN apt-get install -y mc rsyslog

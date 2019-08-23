@@ -1,0 +1,1 @@
+docker exec -it snips /bin/sh /scripts/sam_test_microphone.sh

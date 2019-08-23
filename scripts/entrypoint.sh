@@ -1,11 +1,5 @@
 #!/bin/bash
 
-RUN locale-gen pl_PL.UTF-8
-RUN export LANGUAGE=pl_PL
-RUN export LANG=pl_PL.UTF-8
-RUN export LC_ALL=pl_PL.UTF-8
-RUN update-locale LANG=pl_PL.UTF-8
-
 USER='pi'
 PASSWORD='raspberry'
 

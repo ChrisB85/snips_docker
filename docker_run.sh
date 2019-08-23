@@ -24,7 +24,7 @@ snips
 
 if [ ! -f $CONFIG_DIR/snips/googlecredentials.json ]; then
     echo "WARNING! googlecredentials.json not found! Please go to https://console.cloud.google.com, activate Cloud Speech-to-Text API and download json auth file. Save it as $CONFIG_DIR/snips/googlecredentials.json and restart snips."
-#    exit
+    read -p "Press any key..."
 fi
 
 docker exec -it snips /bin/sh /scripts/init.sh

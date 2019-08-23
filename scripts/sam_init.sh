@@ -1,2 +1,2 @@
-sam connect snips
+sam connect localhost
 sam login

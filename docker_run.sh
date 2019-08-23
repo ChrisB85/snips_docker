@@ -9,7 +9,6 @@ touch $CONFIG_DIR/snips.toml.default
 
 docker run -d \
 --name=snips \
---network containers_default \
 -v /dev/snd:/dev/snd \
 -v $CONFIG_DIR/asound.conf:/etc/asound.conf  \
 -v $CONFIG_DIR/snips.toml:/etc/snips.toml \

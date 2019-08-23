@@ -7,11 +7,6 @@ touch $CONFIG_DIR/asound.conf
 touch $CONFIG_DIR/snips.toml
 touch $CONFIG_DIR/snips.toml.default
 
-if [ ! -f $CONFIG_DIR/snips/googlecredentials.json ]; then
-    echo "WARNING! googlecredentials.json not found! Please download it from https://console.cloud.google.com and place in $CONFIG_DIR/snips"
-    exit
-fi
-
 docker run -d \
 --name=snips \
 --network containers_default \
@@ -26,5 +21,10 @@ docker run -d \
 --privileged \
 -e APT= --tmpfs /run --tmpfs /run/lock --tmpfs /tmp -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 snips
+
+if [ ! -f $CONFIG_DIR/snips/googlecredentials.json ]; then
+    echo "WARNING! googlecredentials.json not found! Please go to https://console.cloud.google.com, activate Cloud Speech-to-Text API and download json auth file. Save it as $CONFIG_DIR/snips/googlecredentials.json and restart snips."
+#    exit
+fi
 
 docker exec -it snips /bin/sh /scripts/init.sh

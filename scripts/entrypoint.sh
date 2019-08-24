@@ -1,12 +1,9 @@
 #!/bin/bash
 
-USER='pi'
-PASSWORD='raspberry'
-
-getent passwd $USER > /dev/null 2&>1
+getent passwd $S_USER > /dev/null 2&>1
 if [ ! $? -eq 0 ]; then
-    useradd -m -p $(openssl passwd -1 $PASSWORD) $USER
-    echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER
+    useradd -m -p $(openssl passwd -1 $S_PASSWORD) $S_USER
+    echo "$S_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$S_USER
 fi
 
 TTS_CACHE_DIR='/usr/share/snips/tts_cache'

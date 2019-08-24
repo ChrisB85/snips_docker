@@ -3,11 +3,11 @@
 LANG_NEW="pl_PL"
 LANG_ENCODING="UTF-8"
 LANG_SYMBOL="$LANG_NEW.$LANG_ENCODING"
-LANG_LOCALE="$LANG_NEW.utf8"
+LOCALE_ENCODING="$LANG_NEW.utf8"
 
 perl -pi -e 's/# '$LANG_SYMBOL' UTF-8/'$LANG_SYMBOL' UTF-8/g' /etc/locale.gen
 
-if !( locale -a | grep -q "$LANG_LOCALE"); then
+if !( locale -a | grep -q "$LOCALE_ENCODING"); then
     locale-gen $LANG_SYMBOL
 fi
 

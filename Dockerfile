@@ -2,6 +2,11 @@
 FROM ubuntu:18.04
 #FROM raspbian/stretch
 
+# Config
+ENV S_USER='pi' \
+    S_PASSWORD='raspberry' \
+    S_SSH_HOST='localhost'
+
 # Let OS know that we're a docker container
 ENV container docker
 
@@ -13,13 +18,6 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update; \
     apt-get install -y systemd logrotate unattended-upgrades locales; \
     apt-get clean
-
-# Scripts
-COPY ${PWD}/scripts /scripts
-
-# Set locale
-RUN /scripts/set_locale.sh
-RUN echo "source /scripts/set_locale.sh" >> /root/.bashrc
 
 # Keep journal in memory, max 50M
 RUN sed -i 's#^.\(Storage\).*#\1=volatile#' /etc/systemd/journald.conf; \
@@ -51,8 +49,28 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F727C778CCB0A455
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D4F50CDCA10A2849
 
 RUN echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
-#RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
-RUN echo "deb https://raspbian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
+RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
+#RUN echo "deb https://raspbian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
+
+# Set locale
+COPY ${PWD}/scripts/set_locale.sh /scripts/set_locale.sh
+RUN /scripts/set_locale.sh && echo "source /scripts/set_locale.sh" >> /root/.bashrc
+
+# Requirements
+RUN apt-get install -y openssh-server sudo zip git mpg123 httpie alsa-utils alsa-tools nodejs npm \
+    python3 python3-pip python3-venv 
+
+# Keep home directory on sudo
+RUN echo 'Defaults env_keep -= "HOME"' > /etc/sudoers.d/sudoers
+
+# Python requirements
+RUN pip3 install python-dateutil virtualenv toml
+
+# MQTT server
+RUN apt-get install -y mosquitto
+
+# Snips SAM
+RUN npm install -g snips-sam
 
 # Snips packages
 RUN apt-get update
@@ -84,32 +102,13 @@ snips-tts \
 snips-watch \
 snips-asr-google
 
-# MQTT server
-RUN apt-get install -y mosquitto
-
-# Python
-RUN apt-get install -y python3 python3-pip python3-venv
-RUN pip3 install python-dateutil virtualenv toml
-
-# Alsa
-RUN apt-get install -y alsa-utils alsa-tools
-
-# NodeJS
-RUN apt-get install -y nodejs npm
-
-# Snips SAM
-RUN npm install -g snips-sam
-
 # Default config backup
 RUN cp /etc/snips.toml /etc/snips.toml.bak
 RUN cp -r /etc/mosquitto /etc/mosquitto.bak
 RUN cp -r /var/lib/snips /var/lib/snips.bak
 
-# SSH & requirements
-RUN apt-get install -y openssh-server sudo zip git mpg123 httpie
-
-# Keep home directory on sudo
-RUN echo 'Defaults env_keep -= "HOME"' > /etc/sudoers.d/sudoers
-
 # Others
 RUN apt-get install -y mc rsyslog
+
+# Scripts
+COPY ${PWD}/scripts /scripts

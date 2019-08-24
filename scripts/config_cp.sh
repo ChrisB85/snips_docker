@@ -13,7 +13,7 @@ fi
 
 if [ ! -d /var/lib/snips/skills ]; then
     cp -Trf /var/lib/snips.bak /var/lib/snips
-    chown -R _snips-skills /var/lib/snips
+    chown -R _snips-skills:snips-skills-admin /var/lib/snips
     service snips-skill-server restart
 fi
 

@@ -1,12 +1,17 @@
-#FROM ubuntu:18.04
-#FROM jrei/systemd-ubuntu:latest
-FROM aheimsbakk/systemd-ubuntu:18.04
+# Base image
+FROM ubuntu:18.04
 
-RUN apt-get install -y dirmngr apt-transport-https software-properties-common dialog apt-utils ca-certificates locales
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F727C778CCB0A455
+# Let OS know that we're a docker container
+ENV container docker
 
-RUN echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
-RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
+# Environment variables for apt
+ENV DEBIAN_FRONTEND noninteractive
+
+# Install
+#   systemd, logrotate and unattended-upgrades
+RUN apt-get update; \
+    apt-get install -y systemd logrotate unattended-upgrades locales; \
+    apt-get clean
 
 # Scripts
 COPY ${PWD}/scripts /scripts
@@ -15,9 +20,39 @@ COPY ${PWD}/scripts /scripts
 RUN /scripts/set_locale.sh
 RUN echo "source /scripts/set_locale.sh" >> /root/.bashrc
 
-RUN apt-get update
+# Keep journal in memory, max 50M
+RUN sed -i 's#^.\(Storage\).*#\1=volatile#' /etc/systemd/journald.conf; \
+    sed -i 's#^.\(RuntimeMaxUse\).*#\1=50M#' /etc/systemd/journald.conf
+
+# Forward journal to console
+RUN sed -i 's#^.\(ForwardToConsole\).*#\1=yes#' /etc/systemd/journald.conf
+
+# Remove interactive prompt on console
+RUN systemctl mask getty.target
+
+# Stop systemd
+STOPSIGNAL SIGRTMIN+3
+
+# Mount these volumes
+VOLUME /run /run/lock /tmp /sys/fs/cgroup
+
+# When exec to docker, start in /root
+WORKDIR /root
+
+# Install extra packages on start
+ENTRYPOINT ["/scripts/entrypoint.sh"]
+
+# Start with systemd
+CMD exec /sbin/init
+
+RUN apt-get install -y dirmngr apt-transport-https software-properties-common dialog apt-utils ca-certificates
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F727C778CCB0A455
+
+RUN echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
+RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
 
 # Snips packages
+RUN apt-get update
 RUN apt-get install -y \
 snips-platform-common=0.61.1 \
 snips-analytics=0.61.1 \
@@ -77,4 +112,4 @@ RUN echo 'Defaults env_keep -= "HOME"' > /etc/sudoers.d/sudoers
 RUN apt-get install -y mc rsyslog
 
 # Replace default entrypoint
-COPY ${PWD}/scripts/entrypoint.sh /docker-entrypoint.sh
+#COPY ${PWD}/scripts/entrypoint.sh /docker-entrypoint.sh

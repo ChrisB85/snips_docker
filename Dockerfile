@@ -1,5 +1,6 @@
 # Base image
 FROM ubuntu:18.04
+#FROM raspbian/stretch
 
 # Let OS know that we're a docker container
 ENV container docker
@@ -47,9 +48,11 @@ CMD exec /sbin/init
 
 RUN apt-get install -y dirmngr apt-transport-https software-properties-common dialog apt-utils ca-certificates
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F727C778CCB0A455
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D4F50CDCA10A2849
 
 RUN echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
-RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
+#RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
+RUN echo "deb https://raspbian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
 
 # Snips packages
 RUN apt-get update
@@ -85,7 +88,7 @@ snips-asr-google
 RUN apt-get install -y mosquitto
 
 # Python
-RUN apt-get install -y python3.6 python3-pip python3-venv
+RUN apt-get install -y python3 python3-pip python3-venv
 RUN pip3 install python-dateutil virtualenv toml
 
 # Alsa
@@ -110,6 +113,3 @@ RUN echo 'Defaults env_keep -= "HOME"' > /etc/sudoers.d/sudoers
 
 # Others
 RUN apt-get install -y mc rsyslog
-
-# Replace default entrypoint
-#COPY ${PWD}/scripts/entrypoint.sh /docker-entrypoint.sh

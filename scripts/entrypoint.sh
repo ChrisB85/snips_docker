@@ -2,7 +2,9 @@
 
 ln -s /lib/systemd/systemd /sbin/init
 #service rsyslog start
-service ssh start
+if [ ! systemctl is-active --quiet ssh]; then
+    service ssh start
+fi
 
 getent passwd $S_USER > /dev/null 2&>1
 if [ ! $? -eq 0 ]; then

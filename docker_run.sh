@@ -29,3 +29,4 @@ fi
 docker exec -it snips /bin/sh /scripts/init.sh
 
 echo "DONE! Now you can deploy your assistant from Snips console by running sam_install_assistant.sh"
+read -p "Press any key to exit..."

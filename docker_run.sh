@@ -27,3 +27,5 @@ if [ ! -f $CONFIG_DIR/snips/googlecredentials.json ]; then
 fi
 
 docker exec -it snips /bin/sh /scripts/init.sh
+
+echo "DONE! Now you can deploy your assistant from Snips console by running sam_install_assistant.sh"

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+ln -s /lib/systemd/systemd /sbin/init
+#service rsyslog start
+service ssh start
+
 getent passwd $S_USER > /dev/null 2&>1
 if [ ! $? -eq 0 ]; then
     useradd -m -p $(openssl passwd -1 $S_PASSWORD) $S_USER
@@ -19,4 +23,3 @@ if [ ! -d $EMPTY_DIR ]; then
 fi
 
 exec "$@"
-

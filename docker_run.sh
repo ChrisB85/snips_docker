@@ -16,6 +16,7 @@ docker run -d \
 -v $CONFIG_DIR/snips:/usr/share/snips \
 -v $CONFIG_DIR/mosquitto:/etc/mosquitto \
 -v $CONFIG_DIR/skills:/var/lib/snips \
+--restart always \
 -p 1883:1883 \
 --privileged \
 -e APT= --tmpfs /run --tmpfs /run/lock --tmpfs /tmp -v /sys/fs/cgroup:/sys/fs/cgroup:ro \

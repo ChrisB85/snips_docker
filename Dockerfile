@@ -7,6 +7,9 @@ ENV S_USER='pi' \
     S_PASSWORD='raspberry' \
     S_SSH_HOST='localhost'
 
+# Timezone
+ENV TZ 'Europe/Warsaw'
+
 # Let OS know that we're a docker container
 ENV container docker
 
@@ -51,6 +54,14 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D4F50CDCA10A2849
 RUN echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
 RUN echo "deb https://debian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
 #RUN echo "deb https://raspbian.snips.ai/stretch stable main" > /etc/apt/sources.list.d/snips.list
+
+# Set timezone
+RUN echo $TZ > /etc/timezone && \
+    apt-get update && apt-get install -y tzdata && \
+    rm /etc/localtime && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    apt-get clean
 
 # Set locale
 COPY ${PWD}/scripts/set_locale.sh /scripts/set_locale.sh

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+service cron start
+
 ln -s /lib/systemd/systemd /sbin/init
 #service rsyslog start
 if [ ! systemctl is-active --quiet ssh]; then

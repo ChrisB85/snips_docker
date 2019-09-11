@@ -1,0 +1,2 @@
+* * * * * root /scripts/snips_watchdog.sh >> /var/log/cron.log
+

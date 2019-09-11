@@ -123,3 +123,11 @@ RUN apt-get install -y mc rsyslog
 
 # Scripts
 COPY ${PWD}/scripts /scripts
+
+# Cron
+RUN touch /var/log/cron.log
+#RUN chown www-data:www-data /var/log/cron.log
+COPY /scripts/cron /etc/cron.d/cron
+RUN crontab /etc/cron.d/cron
+RUN chmod 0644 /etc/cron.d/cron
+RUN service cron reload

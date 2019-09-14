@@ -1,3 +1,7 @@
+#!/bin/bash
+cd "${0%/*}"
+
+./fix_permissions.sh
 sam update-assistant
-/scripts/snips_pl.sh
+./snips_pl.sh
 

@@ -1,2 +1,6 @@
+#!/bin/bash
+cd "${0%/*}"
+
+./fix_permissions.sh
 sam install assistant
-/scripts/snips_pl.sh
+./snips_pl.sh

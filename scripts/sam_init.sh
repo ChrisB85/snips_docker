@@ -9,4 +9,4 @@ KEY_NAME="Snips RSA key"
 #else
 #    echo "$KEY_NAME already exists. To change login credentials please remove it from $KEYS or run sam_connect.sh $S_SSH_HOST."
 #fi
-sam login
+./sam_login.sh

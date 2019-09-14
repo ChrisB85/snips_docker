@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [  ! -s /etc/snips.toml ]; then
     cp -f /etc/snips.toml.bak /etc/snips.toml
 fi

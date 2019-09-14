@@ -1,4 +1,9 @@
-docker rm -f snips
+#!/bin/bash
+
+if [ "$(docker ps -a | grep ' snips')" ]; then
+    docker stop snips
+    docker rm snips
+fi
 
 # Create config dir
 CONFIG_DIR=${PWD}/config

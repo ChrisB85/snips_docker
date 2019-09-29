@@ -16,6 +16,15 @@ fi
 if [ ! -d /var/lib/snips/skills ]; then
     cp -Trf /var/lib/snips.bak /var/lib/snips
     chown -R _snips-skills:snips-skills-admin /var/lib/snips
-    service snips-skill-server restart
 fi
 
+ASR_SKILL_DIR=/var/lib/snips/skills/snips_google_asr
+if [ ! -d $ASR_SKILL_DIR ]; then
+    echo "Installing Google ASR..."
+    git clone https://github.com/ChrisB85/snips_google_asr.git $ASR_SKILL_DIR
+else
+    echo "Updating Google ASR..."
+    cd $ASR_SKILL_DIR && git pull
+fi
+
+service snips-skill-server restart

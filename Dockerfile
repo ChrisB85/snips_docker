@@ -86,20 +86,6 @@ RUN npm install -g snips-sam
 # Snips packages
 RUN apt-get update
 RUN apt-get install -y \
-snips-platform-common=0.61.1 \
-snips-analytics=0.61.1 \
-snips-audio-server=0.61.1 \
-snips-dialogue=0.61.1 \
-snips-hotword=0.61.1 \
-snips-injection=0.61.1 \
-snips-nlu=0.61.1 \
-snips-skill-server=0.61.1 \
-snips-template=0.61.1 \
-snips-tts=0.61.1 \
-snips-watch=0.61.1 \
-snips-asr-google=0.60.12
-
-RUN apt-mark hold \
 snips-platform-common \
 snips-analytics \
 snips-audio-server \
@@ -110,8 +96,7 @@ snips-nlu \
 snips-skill-server \
 snips-template \
 snips-tts \
-snips-watch \
-snips-asr-google
+snips-watch
 
 # Default config backup
 RUN cp /etc/snips.toml /etc/snips.toml.bak
@@ -131,3 +116,7 @@ COPY /scripts/cron /etc/cron.d/cron
 RUN crontab /etc/cron.d/cron
 RUN chmod 0644 /etc/cron.d/cron
 RUN service cron reload
+
+#RUN pip3 install google-cloud-speech hermes-python paho-mqtt
+
+#ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/share/snips/googlecredentials.json

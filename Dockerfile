@@ -88,15 +88,17 @@ RUN apt-get update
 RUN apt-get install -y \
 snips-platform-common \
 snips-analytics \
-snips-audio-server \
+snips-audio-server=0.63.3 \
 snips-dialogue \
 snips-hotword \
 snips-injection \
 snips-nlu \
 snips-skill-server \
 snips-template \
-snips-tts \
+snips-tts=0.63.3 \
 snips-watch
+
+RUN apt-mark hold snips-audio-server=0.63.3 snips-tts=0.63.3
 
 # Default config backup
 RUN cp /etc/snips.toml /etc/snips.toml.bak

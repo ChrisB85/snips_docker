@@ -113,12 +113,7 @@ COPY ${PWD}/scripts /scripts
 
 # Cron
 RUN touch /var/log/cron.log
-#RUN chown www-data:www-data /var/log/cron.log
 COPY /scripts/cron /etc/cron.d/cron
 RUN crontab /etc/cron.d/cron
 RUN chmod 0644 /etc/cron.d/cron
 RUN service cron reload
-
-#RUN pip3 install google-cloud-speech hermes-python paho-mqtt
-
-#ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/share/snips/googlecredentials.json
